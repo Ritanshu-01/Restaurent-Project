@@ -1,0 +1,129 @@
+/* Modern, responsive navbar styling */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    padding: 0 2rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    min-height: 64px;
+}
+.logo {
+    flex: 2;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    font-size: 1.7rem;
+    font-weight: bold;
+    color: #16a34a;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+.logo:hover {
+    color: #e11d48;
+}
+.list {
+    flex: 4;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 1.5rem;
+}
+.list-item {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+.list-item a, .list-item button {
+    color: #222;
+    text-decoration: none;
+    letter-spacing: 1px;
+    font-size: 1.05rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    transition: background 0.2s, color 0.2s, font-weight 0.2s;
+}
+.list-item a:hover, .list-item button:hover {
+    color: #fff;
+    background: #16a34a;
+    font-weight: bold;
+    text-decoration: none;
+}
+.list-item a.active {
+    color: #e11d48;
+    font-weight: bold;
+}
+.list-item .relative {
+    position: relative;
+}
+.list-item .relative span:last-child {
+    position: absolute;
+    top: -8px;
+    right: -12px;
+    background: #16a34a;
+    color: #fff;
+    border-radius: 50%;
+    font-size: 0.8rem;
+    padding: 2px 7px;
+    font-weight: 700;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}
+.navBtn {
+    background: #e11d48;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 0.5rem 1.2rem;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+}
+.navBtn:hover {
+    background: #16a34a;
+    color: #fff;
+}
+@media (max-width: 900px) {
+    .navbar {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 0 1rem;
+    }
+    .list {
+        flex-direction: column;
+        gap: 0.5rem;
+        width: 100%;
+        align-items: flex-start;
+    }
+    .logo {
+        justify-content: center;
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+}
+
+@media screen and (max-width:1000px){
+    .navbar{
+        flex-direction: column;
+    }
+    .logo{
+        padding:20px;
+    }
+    .list{
+        flex-direction: column;
+    }
+    .logo:hover{
+    padding: 20px 0px;
+    }
+    .list-item{
+        display: flex;
+        justify-content: center;
+    }
+}
