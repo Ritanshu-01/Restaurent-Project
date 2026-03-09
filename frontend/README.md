@@ -1,70 +1,268 @@
-# Getting Started with Create React App
+🍽️ MERN Restaurant Ordering System
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A Full-Stack Restaurant Ordering Web Application built using the MERN Stack:
 
-## Available Scripts
+MongoDB
 
-In the project directory, you can run:
+Express.js
 
-### `npm start`
+React.js
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Node.js
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+This application simulates a modern online food ordering platform where users can browse menu items, add food to their cart, place orders, and track their order history through a clean and responsive interface.
 
-### `npm test`
+🚀 Features
+👤 User Features
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Browse restaurant menu items
 
-### `npm run build`
+View food item details
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Add items to cart
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Increase or decrease item quantity
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Remove items from cart
 
-### `npm run eject`
+Checkout and place orders
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+Choose payment method
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+View previous order history
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+Fully responsive UI for mobile and desktop
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+🛒 Cart System
 
-## Learn More
+The cart functionality allows users to manage their selected food items.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Features include:
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Add items to cart
 
-### Code Splitting
+Update item quantity
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+Remove items from cart
 
-### Analyzing the Bundle Size
+Real-time cart updates
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+Automatic price calculation
 
-### Making a Progressive Web App
+Display subtotal and total price
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+📦 Order Management
 
-### Advanced Configuration
+The system stores and manages food orders.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+Capabilities:
 
-### Deployment
+Create new orders
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+Store orders in MongoDB database
 
-### `npm run build` fails to minify
+Display user order history
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Track order status
+
+Retrieve order details
+
+🔐 Authentication & Security
+
+User authentication ensures secure access to features.
+
+User registration
+
+User login
+
+JWT authentication
+
+Protected backend routes
+
+Secure user data management
+
+🛠️ Tech Stack
+Frontend
+
+React.js
+
+Tailwind CSS
+
+Axios
+
+React Router DOM
+
+Backend
+
+Node.js
+
+Express.js
+
+MongoDB
+
+Mongoose
+
+JWT Authentication
+
+Development Tools
+
+Git
+
+GitHub
+
+Postman
+
+VS Code / Cursor AI
+
+📂 Project Structure
+restaurant-project
+│
+├── backend
+│ │
+│ ├── controllers
+│ │ ├── cartController.js
+│ │ ├── orderController.js
+│ │
+│ ├── models
+│ │ ├── User.js
+│ │ ├── FoodItem.js
+│ │ ├── Order.js
+│ │
+│ ├── routes
+│ │ ├── cartRoutes.js
+│ │ ├── orderRoutes.js
+│ │
+│ ├── middleware
+│ │ ├── authMiddleware.js
+│ │
+│ └── index.js
+│
+├── frontend
+│ │
+│ ├── src
+│ │ │
+│ │ ├── components
+│ │ │ ├── Navbar.jsx
+│ │ │ ├── FoodCard.jsx
+│ │ │
+│ │ ├── pages
+│ │ │ ├── Home.jsx
+│ │ │ ├── Cart.jsx
+│ │ │ ├── Checkout.jsx
+│ │ │ ├── Orders.jsx
+│ │ │
+│ │ ├── context
+│ │ │ ├── CartContext.jsx
+│ │ │
+│ │ └── App.jsx
+│ │
+│ └── package.json
+│
+└── README.md
+⚙️ Installation & Setup
+
+Follow these steps to run the project locally.
+
+1️⃣ Clone the Repository
+git clone https://github.com/yourusername/restaurant-project.git
+2️⃣ Install Backend Dependencies
+cd backend
+npm install
+3️⃣ Install Frontend Dependencies
+cd frontend
+npm install
+4️⃣ Configure Environment Variables
+
+Create a .env file inside the backend folder.
+
+Example:
+
+PORT=5000
+MONGO_URI=your_mongodb_connection_string
+JWT_SECRET=your_secret_key
+5️⃣ Start Backend Server
+npm start
+
+Server will run on:
+
+http://localhost:5000
+6️⃣ Start Frontend Application
+npm run dev
+
+Frontend will run on:
+
+http://localhost:5173
+🌐 API Endpoints
+Cart APIs
+Method Endpoint Description
+POST /api/cart/add Add item to cart
+POST /api/cart/remove Remove item from cart
+GET /api/cart/:userId Get user cart
+Order APIs
+Method Endpoint Description
+POST /api/orders/create Create order
+GET /api/orders/user/:userId Get user orders
+📸 Screenshots
+
+Add screenshots of your application here.
+
+Examples:
+
+Home Page
+
+Menu Page
+
+Cart Page
+
+Checkout Page
+
+Orders Page
+
+🎯 Future Improvements
+
+Planned features for future updates:
+
+Razorpay / Stripe payment integration
+
+Real-time order tracking
+
+Admin dashboard
+
+Restaurant analytics
+
+Coupon & discount system
+
+Order rating system
+
+📚 Learning Outcomes
+
+This project helped in understanding:
+
+Full-stack application development using MERN
+
+Building RESTful APIs
+
+Implementing secure authentication
+
+Managing state in React
+
+Designing scalable backend architecture
+
+👨‍💻 Author
+
+Ritanshu Nijhawan
+
+MCA Student | Full Stack Developer
+
+GitHub
+https://github.com/yourusername
+
+LinkedIn
+(Add your LinkedIn profile link)
+
+⭐ Support
+
+If you found this project useful:
+
+⭐ Star the repository on GitHub
+🍴 Fork the project to build upon it
