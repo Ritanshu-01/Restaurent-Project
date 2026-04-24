@@ -1,6 +1,7 @@
 import React from 'react';
 import { useCart } from '../context/CartContext';
 import { Link, useNavigate } from 'react-router-dom';
+import { formatINR } from '../utils/currency';
 
 export default function CartPage() {
   const { items, subtotal, deliveryFee, tax, total, updateQuantity, removeItem, clearCart, loading } =
@@ -83,7 +84,7 @@ export default function CartPage() {
                     </button>
                   </div>
                   <div className="text-sm font-semibold">
-                    ${(item.price * item.quantity).toFixed(2)}
+                    {formatINR(item.price * item.quantity)}
                   </div>
                 </div>
               </div>
@@ -95,19 +96,19 @@ export default function CartPage() {
           <div className="space-y-2 text-sm">
             <div className="flex justify-between">
               <span>Subtotal</span>
-              <span>${subtotal.toFixed(2)}</span>
+              <span>{formatINR(subtotal)}</span>
             </div>
             <div className="flex justify-between">
               <span>Delivery fee</span>
-              <span>${deliveryFee.toFixed(2)}</span>
+              <span>{formatINR(deliveryFee)}</span>
             </div>
             <div className="flex justify-between">
               <span>Tax (5%)</span>
-              <span>${tax.toFixed(2)}</span>
+              <span>{formatINR(tax)}</span>
             </div>
             <div className="mt-3 flex justify-between border-t border-gray-200 pt-3 text-base font-semibold">
               <span>Total</span>
-              <span>${total.toFixed(2)}</span>
+              <span>{formatINR(total)}</span>
             </div>
           </div>
           <button

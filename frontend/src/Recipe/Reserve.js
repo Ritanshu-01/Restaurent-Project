@@ -96,7 +96,7 @@ console.log(result)
               {/* name */}
   <div className="col-md-4">
     <label htmlFor="validationDefault01" className="form-label">Your name</label>
-    <input type="text" className="form-control" id="validationDefault01" placeholder="Mandeep Sallan" value={name} onChange={(e)=>setName(e.target.value)}/>
+    <input type="text" className="form-control" id="validationDefault01" placeholder="Ritanshu Nijhawan" value={name} onChange={(e)=>setName(e.target.value)}/>
      {error && !name && <span id="emailHelp" className="form-text" style={{color:'red',fontSize:"15px"}}>Please enter a valid name</span>} 
   </div>
   {/* phone number */}
@@ -109,7 +109,7 @@ console.log(result)
   <div className="col-md-4">
     <label htmlFor="validationDefaultUsername" className="form-label">Email Address</label>
     <div className="input-group">
-      <input type="email" className="form-control" id="validationDefaultUsername"  aria-describedby="inputGroupPrepend2" placeholder="man67@gmail.com" value={email} onChange={(e)=>setEmail(e.target.value)} />
+      <input type="email" className="form-control" id="validationDefaultUsername"  aria-describedby="inputGroupPrepend2" placeholder="ritanshu@gmail.com" value={email} onChange={(e)=>setEmail(e.target.value)} />
     </div>
   </div>
   {/* people */}

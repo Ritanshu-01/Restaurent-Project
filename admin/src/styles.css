@@ -1,0 +1,42 @@
+* { box-sizing: border-box; }
+body { margin: 0; font-family: Inter, Segoe UI, Arial, sans-serif; background: #0f1115; color: #111; }
+
+.admin-shell { min-height: 100vh; display: grid; grid-template-columns: 260px 1fr; }
+.sidebar { background: #151a21; color: #f7f7f7; padding: 24px; display: flex; flex-direction: column; gap: 14px; }
+.sidebar nav { display: flex; flex-direction: column; gap: 8px; }
+.sidebar a { color: #ccd3de; text-decoration: none; padding: 8px 10px; border-radius: 8px; }
+.sidebar a.active, .sidebar a:hover { background: #273246; color: #fff; }
+.content { padding: 24px; background: #f3f5f8; }
+
+.panel { background: #fff; border-radius: 12px; padding: 16px; box-shadow: 0 8px 20px rgba(0,0,0,.06); }
+.grid { display: grid; gap: 16px; }
+.grid.two { grid-template-columns: 360px 1fr; align-items: start; }
+.grid.stats { grid-template-columns: repeat(3, 1fr); }
+.muted { color: #6b7280; }
+.error { background: #fee2e2; color: #991b1b; padding: 10px; border-radius: 8px; margin: 8px 0; }
+.info { background: #e0f2fe; color: #075985; padding: 10px; border-radius: 8px; margin: 8px 0; }
+
+input, textarea, select, button {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  margin: 6px 0;
+  font: inherit;
+}
+button { cursor: pointer; background: #111827; color: #fff; }
+button.danger { background: #b91c1c; color: #fff; }
+label { display: flex; align-items: center; gap: 8px; color: #111; font-size: 14px; }
+label input { width: auto; margin: 0; }
+
+table { width: 100%; border-collapse: collapse; margin-top: 10px; background: #fff; }
+th, td { text-align: left; border-bottom: 1px solid #e5e7eb; padding: 10px; color: #111; }
+td button { width: auto; margin-right: 8px; padding: 6px 10px; font-size: 12px; }
+
+.login-wrap { min-height: 100vh; display: grid; place-items: center; background: linear-gradient(140deg, #0f1115, #1f2937); }
+.login-wrap .panel { width: 100%; max-width: 420px; }
+
+@media (max-width: 992px) {
+  .admin-shell { grid-template-columns: 1fr; }
+  .grid.two, .grid.stats { grid-template-columns: 1fr; }
+}

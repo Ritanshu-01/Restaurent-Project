@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { useCart } from '../context/CartContext';
 import { Link } from 'react-router-dom';
 import { API_BASE } from '../config/api';
+import { formatINR } from '../utils/currency';
 
-const steps = ['Preparing', 'Packed', 'Cooking', 'Out for Delivery', 'Delivered'];
+const steps = ['Pending', 'Preparing', 'Out for Delivery', 'Delivered'];
 
 export default function OrdersPage() {
   const { orders: localOrders, reorder } = useCart();
@@ -33,7 +34,7 @@ export default function OrdersPage() {
       items: o.items || [],
       total: o.totalAmount ?? 0,
       paymentMethod: o.paymentMethod,
-      orderStatus: o.orderStatus || 'Preparing',
+      orderStatus: o.orderStatus || 'Pending',
       estimatedDelivery: o.estimatedDelivery || '30-40 min',
       createdAt: o.createdAt,
     })),
@@ -88,7 +89,7 @@ export default function OrdersPage() {
               </div>
               <div>
                 <p className="text-xs text-gray-500">Amount</p>
-                <p className="text-sm font-semibold">${order.total.toFixed(2)}</p>
+                <p className="text-sm font-semibold">{formatINR(order.total)}</p>
               </div>
               <div>
                 <p className="text-xs text-gray-500">Payment</p>
@@ -101,20 +102,6 @@ export default function OrdersPage() {
                 >
                   Reorder
                 </button>
-                {/* Show 'Mark as Packed' if not already packed or beyond */}
-                {order.orderStatus !== 'Packed' && steps.indexOf(order.orderStatus) < steps.indexOf('Packed') && (
-                  <button
-                    onClick={() => {
-                      // For demo: update local order status to 'Packed'. In real app, call API.
-                      order.orderStatus = 'Packed';
-                      // Force re-render
-                      window.location.reload();
-                    }}
-                    className="rounded-full border border-yellow-400 px-3 py-1 text-xs font-semibold text-yellow-700 hover:bg-yellow-100 ml-2"
-                  >
-                    Mark as Packed
-                  </button>
-                )}
               </div>
             </div>
 
@@ -123,8 +110,7 @@ export default function OrdersPage() {
               <ul className="space-y-1 text-gray-700">
                 {order.items.map((item, idx) => (
                   <li key={item.id || item._id || idx}>
-                    {item.name} × {item.quantity} — $
-                    {((item.price || 0) * (item.quantity || 1)).toFixed(2)}
+                    {item.name} × {item.quantity} — {formatINR((item.price || 0) * (item.quantity || 1))}
                   </li>
                 ))}
               </ul>

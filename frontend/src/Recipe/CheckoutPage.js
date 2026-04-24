@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useCart } from '../context/CartContext';
 import { useNavigate } from 'react-router-dom';
 import { API_BASE } from '../config/api';
+import { formatINR } from '../utils/currency';
 
 export default function CheckoutPage() {
   const { items, subtotal, deliveryFee, tax, total, clearCart, addOrderToHistory, loading } = useCart();
@@ -234,30 +235,30 @@ export default function CheckoutPage() {
                 <span>
                   {item.name} × {item.quantity}
                 </span>
-                <span>${(item.price * item.quantity).toFixed(2)}</span>
+                <span>{formatINR(item.price * item.quantity)}</span>
               </div>
             ))}
             <div className="mt-3 flex justify-between">
               <span>Subtotal</span>
-              <span>${subtotal.toFixed(2)}</span>
+              <span>{formatINR(subtotal)}</span>
             </div>
             <div className="flex justify-between">
               <span>Delivery fee</span>
-              <span>${deliveryFee.toFixed(2)}</span>
+              <span>{formatINR(deliveryFee)}</span>
             </div>
             <div className="flex justify-between">
               <span>Tax (5%)</span>
-              <span>${tax.toFixed(2)}</span>
+              <span>{formatINR(tax)}</span>
             </div>
             {effectiveCoupon && (
               <div className="flex justify-between text-green-600">
                 <span>Coupon discount</span>
-                <span>- ${discount.toFixed(2)}</span>
+                <span>- {formatINR(discount)}</span>
               </div>
             )}
             <div className="mt-3 flex justify-between border-t border-gray-200 pt-3 text-base font-semibold">
               <span>Total</span>
-              <span>${grandTotal.toFixed(2)}</span>
+              <span>{formatINR(grandTotal)}</span>
             </div>
             <p className="mt-2 text-xs text-gray-500">
               Estimated delivery time:{' '}

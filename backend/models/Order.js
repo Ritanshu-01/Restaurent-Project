@@ -22,7 +22,7 @@ const orderSchema = new mongoose.Schema({
     pincode: String,
     instructions: String
   },
-  orderStatus: { type: String, default: 'Preparing' },
+  orderStatus: { type: String, enum: ['Pending', 'Preparing', 'Out for Delivery', 'Delivered'], default: 'Pending' },
   estimatedDelivery: String,
   coupon: String,
   tracking: [

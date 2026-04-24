@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { API_BASE } from '../config/api';
 
@@ -9,10 +9,7 @@ function UpdateComment() {
     const navigate=useNavigate()
     const params=useParams()
 
-    useEffect(()=>{
-        getdetails()
-    },[])
-    let getdetails=async()=>{
+    const getdetails = useCallback(async () => {
 
 let id=params.id
 
@@ -21,7 +18,11 @@ let id=params.id
          console.log(result)
          setName(result.name)
          setComment(result.comment)
-    }
+    }, [params.id]);
+
+    useEffect(()=>{
+        getdetails()
+    },[getdetails])
 
     let clickHandler=async()=>{
         if( !name || !comment){

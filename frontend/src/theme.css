@@ -1,0 +1,187 @@
+:root {
+  --lux-bg: #0b0b0d;
+  --lux-surface: #151519;
+  --lux-surface-2: #1d1d22;
+  --lux-text: #f9f5e8;
+  --lux-muted: #b8b2a3;
+  --lux-gold: #d4af37;
+  --lux-gold-soft: #f3d98b;
+}
+
+body {
+  background: radial-gradient(circle at top right, #1c1a13, #0b0b0d 55%);
+  color: var(--lux-text);
+  font-family: "Segoe UI", "Inter", sans-serif;
+}
+
+a {
+  color: inherit;
+}
+
+.lux-card {
+  background: linear-gradient(180deg, var(--lux-surface), var(--lux-surface-2));
+  border: 1px solid rgba(212, 175, 55, 0.16);
+  border-radius: 18px;
+}
+
+.lux-btn {
+  background: linear-gradient(90deg, #d4af37, #f3d98b);
+  color: #18130a;
+  border: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.lux-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(212, 175, 55, 0.26);
+}
+
+.lux-input {
+  background: #111116;
+  color: var(--lux-text);
+  border: 1px solid rgba(212, 175, 55, 0.25);
+}
+
+/* Global form readability + contrast safety */
+input,
+textarea,
+select {
+  background-color: #ffffff;
+  color: #111111;
+  caret-color: #111111;
+  border: 1px solid #c8c8c8;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #6b7280;
+  opacity: 1;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  background-color: #ffffff;
+  color: #111111;
+  caret-color: #111111;
+  border-color: var(--lux-gold);
+  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2);
+}
+
+input:disabled,
+textarea:disabled,
+select:disabled {
+  background-color: #f1f1f1;
+  color: #4b5563;
+  -webkit-text-fill-color: #4b5563;
+  cursor: not-allowed;
+  opacity: 1;
+}
+
+/* Dark themed controls keep light text and visible cursor */
+.lux-input,
+.lux-input:focus {
+  background-color: #1e1e1e;
+  color: #ffffff;
+  caret-color: #ffffff;
+  border-color: rgba(212, 175, 55, 0.35);
+}
+
+.lux-input::placeholder {
+  color: #b8b2a3;
+}
+
+/* Chrome autofill fix: remove yellow and force readable text */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 1000px #ffffff inset !important;
+  -webkit-text-fill-color: #111111 !important;
+  caret-color: #111111 !important;
+}
+
+.lux-input:-webkit-autofill,
+.lux-input:-webkit-autofill:hover,
+.lux-input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 1000px #1e1e1e inset !important;
+  -webkit-text-fill-color: #ffffff !important;
+  caret-color: #ffffff !important;
+}
+
+/* Global white-surface readability fixes */
+.bg-white,
+.card:not(.lux-card),
+.card:not(.lux-card) .card-body,
+.rounded-lg.bg-white,
+.rounded-2xl.bg-white,
+.shadow-sm.bg-white,
+.shadow-md.bg-white {
+  color: #111111;
+}
+
+.bg-white h1,
+.bg-white h2,
+.bg-white h3,
+.bg-white h4,
+.bg-white h5,
+.bg-white h6,
+.card:not(.lux-card) h1,
+.card:not(.lux-card) h2,
+.card:not(.lux-card) h3,
+.card:not(.lux-card) h4,
+.card:not(.lux-card) h5,
+.card:not(.lux-card) h6 {
+  color: #000000;
+}
+
+.bg-white p,
+.bg-white span,
+.bg-white label,
+.bg-white li,
+.bg-white small,
+.bg-white .text-muted,
+.card:not(.lux-card) p,
+.card:not(.lux-card) span,
+.card:not(.lux-card) label,
+.card:not(.lux-card) li,
+.card:not(.lux-card) small,
+.card:not(.lux-card) .text-muted {
+  color: #6b7280;
+}
+
+.bg-white .fw-bold,
+.bg-white .font-semibold,
+.bg-white .font-bold,
+.card:not(.lux-card) .fw-bold,
+.card:not(.lux-card) .font-semibold,
+.card:not(.lux-card) .font-bold {
+  color: #111111;
+}
+
+/* Ensure action controls remain readable on white cards */
+.bg-white button:not(.text-white):not(.lux-btn),
+.bg-white a.btn:not(.text-white):not(.lux-btn),
+.card:not(.lux-card) button:not(.text-white):not(.lux-btn),
+.card:not(.lux-card) a.btn:not(.text-white):not(.lux-btn) {
+  color: #111111;
+}
+
+/* Prevent gold/light branding text on white surfaces */
+.bg-white .text-warning,
+.bg-white .text-yellow,
+.bg-white .text-amber,
+.bg-white .text-gold,
+.card:not(.lux-card) .text-warning,
+.card:not(.lux-card) .text-yellow,
+.card:not(.lux-card) .text-amber,
+.card:not(.lux-card) .text-gold {
+  color: #111111 !important;
+}

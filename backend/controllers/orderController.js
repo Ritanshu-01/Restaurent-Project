@@ -1,5 +1,6 @@
 const Order = require('../models/Order');
 const Cart = require('../models/Cart');
+const ALLOWED_STATUSES = ['Pending', 'Preparing', 'Out for Delivery', 'Delivered'];
 
 exports.createOrder = async (req, res) => {
   try {
@@ -59,7 +60,7 @@ exports.createOrder = async (req, res) => {
       totalAmount,
       paymentMethod,
       deliveryAddress,
-      orderStatus: 'Preparing',
+      orderStatus: 'Pending',
       estimatedDelivery: '30-40 min',
       coupon
     });
@@ -111,6 +112,9 @@ exports.updateOrderStatus = async (req, res) => {
     if (!orderId || !status) {
       return res.status(400).json({ error: 'Order id and status are required' });
     }
+    if (!ALLOWED_STATUSES.includes(status)) {
+      return res.status(400).json({ error: 'Invalid order status' });
+    }
     const order = await Order.findById(orderId);
     if (!order) return res.status(404).json({ error: 'Order not found' });
     order.orderStatus = status;
@@ -128,6 +132,9 @@ exports.updateOrderStatusById = async (req, res) => {
     const { status } = req.body;
     if (!orderId || !status) {
       return res.status(400).json({ error: 'Order id and status are required' });
+    }
+    if (!ALLOWED_STATUSES.includes(status)) {
+      return res.status(400).json({ error: 'Invalid order status' });
     }
     const order = await Order.findById(orderId);
     if (!order) return res.status(404).json({ error: 'Order not found' });

@@ -1,240 +1,145 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import './Menu.css';
 import Aos from 'aos';
 import 'aos/dist/aos.css';
 import { useCart } from '../context/CartContext';
+import { API_BASE } from '../config/api';
+import { getFoodItems, submitFoodReview } from '../services/foodService';
+import { formatINR } from '../utils/currency';
 
-const menuItems = [
-  {
-    id: 'nuts-biscuits',
-    name: 'Nuts Biscuits',
-    price: 6.7,
-    image:
-      'https://plus.unsplash.com/premium_photo-1669727915223-46c13b2f4232?ixlib=rb-4.0.3&auto=format&fit=crop&w=870&q=80',
-    category: 'Breakfast',
-  },
-  {
-    id: 'fruit-salad',
-    name: 'Fruit Salad',
-    price: 1.5,
-    image:
-      'https://images.unsplash.com/photo-1560788843-f1af8e869d0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=887&q=80',
-    category: 'Breakfast',
-  },
-  {
-    id: 'lemon-drink',
-    name: 'Lemon drink',
-    price: 1.2,
-    image:
-      'https://images.unsplash.com/photo-1656936631969-9e7cdbae5ae3?ixlib=rb-4.0.3&auto=format&fit=crop&w=870&q=80',
-    category: 'Breakfast',
-  },
-  {
-    id: 'pizza',
-    name: 'Pizza',
-    price: 6.7,
-    image:
-      'https://images.unsplash.com/photo-1513104890138-7c749659a591?ixlib=rb-4.0.3&auto=format&fit=crop&w=870&q=80',
-    category: 'Lunch',
-  },
-  {
-    id: 'french-fries',
-    name: 'French Fries',
-    price: 1.5,
-    image:
-      'https://images.unsplash.com/photo-1541592106381-b31e9677c0e5?ixlib=rb-4.0.3&auto=format&fit=crop&w=870&q=80',
-    category: 'Lunch',
-  },
-  {
-    id: 'brown-rice',
-    name: 'Brown Rice',
-    price: 1.2,
-    image:
-      'https://images.unsplash.com/photo-1496662559123-ac291228fb6c?ixlib=rb-4.0.3&auto=format&fit=crop&w=870&q=80',
-    category: 'Lunch',
-  },
-  {
-    id: 'punjabi-cuisine',
-    name: 'Punjabi Cuisine',
-    price: 6.7,
-    image:
-      'https://images.unsplash.com/photo-1631452180539-96aca7d48617?ixlib=rb-4.0.3&auto=format&fit=crop&w=870&q=80',
-    category: 'Dinner',
-  },
-  {
-    id: 'cheesy-sandwich',
-    name: 'Cheesy sandwich',
-    price: 1.5,
-    image:
-      'https://plus.unsplash.com/premium_photo-1664472757995-3260cd26e477?ixlib=rb-4.0.3&auto=format&fit=crop&w=761&q=80',
-    category: 'Dinner',
-  },
-  {
-    id: 'veg-burger',
-    name: 'Veg burger',
-    price: 1.2,
-    image:
-      'https://images.unsplash.com/photo-1512152272829-e3139592d56f?ixlib=rb-4.0.3&auto=format&fit=crop&w=870&q=80',
-    category: 'Dinner',
-  },
-];
+const fallbackImage = 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=870&q=80';
 
 export default function Menu() {
   const { addItem, favorites, toggleFavorite } = useCart();
+  const [menuItems, setMenuItems] = useState([]);
+  const [search, setSearch] = useState('');
+  const [activeCategory, setActiveCategory] = useState('All');
+  const [priceRange, setPriceRange] = useState('all');
+  const [minRating, setMinRating] = useState('0');
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [reviewingId, setReviewingId] = useState('');
 
   useEffect(() => {
     Aos.init({ duration: 2000 });
+    getFoodItems()
+      .then((data) => setMenuItems(data))
+      .catch(() => setError('Unable to load menu right now. Please try again.'))
+      .finally(() => setLoading(false));
   }, []);
+
+  const categories = useMemo(() => ['All', ...new Set(menuItems.map((item) => item.category).filter(Boolean))], [menuItems]);
+  const filteredItems = useMemo(() => menuItems.filter((item) => {
+    const matchesSearch = item.name.toLowerCase().includes(search.toLowerCase());
+    const matchesCategory = activeCategory === 'All' || item.category === activeCategory;
+    const ratingMatch = Number(item.ratingAverage || 0) >= Number(minRating || 0);
+    const discountedPrice = item.price - (item.price * ((item.discountPercent || 0) / 100));
+    const priceMatch =
+      priceRange === 'all' ||
+      (priceRange === 'low' && discountedPrice < 300) ||
+      (priceRange === 'mid' && discountedPrice >= 300 && discountedPrice <= 700) ||
+      (priceRange === 'high' && discountedPrice > 700);
+    return matchesSearch && matchesCategory && ratingMatch && priceMatch && item.available !== false;
+  }), [menuItems, search, activeCategory, minRating, priceRange]);
+
+  const toImageUrl = (src) => {
+    if (!src) return fallbackImage;
+    if (src.startsWith('http')) return src;
+    return `${API_BASE}${src}`;
+  };
+
+  const handleQuickReview = async (item) => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      setError('Please login first to submit ratings.');
+      return;
+    }
+    const rating = Number(window.prompt(`Rate ${item.name} (1-5):`, '5'));
+    if (!rating || rating < 1 || rating > 5) return;
+    try {
+      setReviewingId(item._id);
+      const user = JSON.parse(localStorage.getItem('user1') || '{}');
+      await submitFoodReview(item._id, { rating, userName: user.name || 'Guest' }, token);
+      const data = await getFoodItems();
+      setMenuItems(data);
+    } catch (e) {
+      setError(e.message);
+    } finally {
+      setReviewingId('');
+    }
+  };
+
   return (
     <div>
+      <br />
+      <div className="hero1">
+        <div className="text1" data-aos="fade-up">
+          <h1>Our Menu</h1>
+          <p><b>Premium dishes curated for a 5-star dining experience</b></p>
+        </div>
+      </div>
 
-<br />
-<div className="hero1">
-    
-    <div className="text1" data-aos="fade-up">
-    <h1>Our Menu</h1>
-    <p><b>Perfect for all breakfast,lunch and dinner</b></p>
-    </div>
-   
-</div>
-   
-<h3 className="p1 m-5" data-aos="fade-right"><b>Breakfast Menu</b></h3>
-
-<div className="container">
-  <div className="row">
-    {menuItems
-      .filter((item) => item.category === 'Breakfast')
-      .map((item) => (
-        <div key={item.id} className="col-sm-12 col-lg-4 col-md-6" data-aos="fade-up">
-          <div className="card relative">
-            <img src={item.image} className="card-img-top" alt={item.name} height="200px" />
-            <div className="card-body">
-              <h5 className="card-title p1">{item.name}</h5>
-              <p className="card-text">
-                <b>${item.price.toFixed(2)}</b>
-              </p>
-              <button
-                type="button"
-                className="mt-2 inline-flex items-center rounded-full bg-success px-3 py-1 text-sm font-semibold text-white"
-                onClick={() => addItem(item)}
-              >
-                Add to cart
+      <div className="mx-auto mt-6 max-w-6xl px-4">
+        <div className="lux-card mb-4 grid gap-3 p-3 md:grid-cols-[1fr,auto,auto,auto]">
+          <input value={search} onChange={(e) => setSearch(e.target.value)} className="lux-input rounded-full px-4 py-2 text-sm" placeholder="Search dishes..." />
+          <select className="lux-input rounded-full px-3 py-2 text-sm" value={priceRange} onChange={(e) => setPriceRange(e.target.value)}>
+            <option value="all">All Prices</option>
+            <option value="low">Under ₹300</option>
+            <option value="mid">₹300 - ₹700</option>
+            <option value="high">Above ₹700</option>
+          </select>
+          <select className="lux-input rounded-full px-3 py-2 text-sm" value={minRating} onChange={(e) => setMinRating(e.target.value)}>
+            <option value="0">Any Rating</option>
+            <option value="3">3★ & above</option>
+            <option value="4">4★ & above</option>
+          </select>
+          <div className="flex flex-wrap gap-2">
+            {categories.map((category) => (
+              <button key={category} className={`rounded-full px-4 py-2 text-xs font-semibold ${activeCategory === category ? 'lux-btn' : 'bg-gray-100 text-gray-700'}`} onClick={() => setActiveCategory(category)}>
+                {category}
               </button>
-              <button
-                type="button"
-                className="ms-2 inline-flex h-8 w-8 items-center justify-center rounded-full border-0 bg-light"
-                onClick={() => toggleFavorite(item.id)}
-                aria-label="Toggle favorite"
-              >
-                <span style={{ color: favorites.includes(item.id) ? '#dc2626' : '#9ca3af' }}>
-                  ♥
-                </span>
-              </button>
-            </div>
+            ))}
           </div>
         </div>
-      ))}
-  </div>
-</div>
-{/* second row */}
-  <h3 className="p1 m-5" data-aos="fade-right"><b>Lunch Menu</b></h3>
-<div className="container">
-  <div className="row">
-    {menuItems
-      .filter((item) => item.category === 'Lunch')
-      .map((item) => (
-        <div key={item.id} className="col-sm-12 col-lg-4 col-md-6" data-aos="fade-up">
-          <div className="card relative">
-            <img src={item.image} className="card-img-top" alt={item.name} height="200px" />
-            <div className="card-body">
-              <h5 className="card-title p1">{item.name}</h5>
-              <p className="card-text">
-                <b>${item.price.toFixed(2)}</b>
-              </p>
-              <button
-                type="button"
-                className="mt-2 inline-flex items-center rounded-full bg-success px-3 py-1 text-sm font-semibold text-white"
-                onClick={() => addItem(item)}
-              >
-                Add to cart
-              </button>
-              <button
-                type="button"
-                className="ms-2 inline-flex h-8 w-8 items-center justify-center rounded-full border-0 bg-light"
-                onClick={() => toggleFavorite(item.id)}
-                aria-label="Toggle favorite"
-              >
-                <span style={{ color: favorites.includes(item.id) ? '#dc2626' : '#9ca3af' }}>
-                  ♥
-                </span>
-              </button>
-            </div>
+
+        {loading && (
+          <div className="row">
+            {[1, 2, 3].map((s) => <div key={s} className="col-sm-12 col-lg-4 col-md-6 mb-4"><div className="lux-card p-3"><div className="placeholder-glow"><span className="placeholder col-12" style={{height:'180px'}}></span></div></div></div>)}
           </div>
-        </div>
-      ))}
-  </div>
-</div>
+        )}
+        {error && <p className="rounded-lg bg-red-50 p-3 text-sm text-red-700">{error}</p>}
+        {!loading && !error && filteredItems.length === 0 && <p className="lux-card p-4 text-sm">No dishes found. Try adjusting filters.</p>}
 
-
-  <h3 className="p1 m-5" data-aos="fade-right"><b>Dinner Menu</b></h3>
-{/* third row */}
-<div className="container">
-  <div className="row">
-    {menuItems
-      .filter((item) => item.category === 'Dinner')
-      .map((item) => (
-        <div key={item.id} className="col-sm-12 col-md-6 col-lg-4" data-aos="fade-up">
-          <div className="card relative">
-            <img src={item.image} className="card-img-top" alt={item.name} height="200px" />
-            <div className="card-body">
-              <h5 className="card-title p1">{item.name}</h5>
-              <p className="card-text">
-                <b>${item.price.toFixed(2)}</b>
-              </p>
-              <button
-                type="button"
-                className="mt-2 inline-flex items-center rounded-full bg-success px-3 py-1 text-sm font-semibold text-white"
-                onClick={() => addItem(item)}
-              >
-                Add to cart
-              </button>
-              <button
-                type="button"
-                className="ms-2 inline-flex h-8 w-8 items-center justify-center rounded-full border-0 bg-light"
-                onClick={() => toggleFavorite(item.id)}
-                aria-label="Toggle favorite"
-              >
-                <span style={{ color: favorites.includes(item.id) ? '#dc2626' : '#9ca3af' }}>
-                  ♥
-                </span>
-              </button>
-            </div>
+        {!loading && !error && (
+          <div className="row">
+            {filteredItems.map((item) => (
+              <div key={item._id} className="col-sm-12 col-lg-4 col-md-6 mb-4" data-aos="fade-up">
+                <div className="card relative h-100 lux-card">
+                  <img src={toImageUrl(item.image)} className="card-img-top" alt={item.name} height="220px" />
+                  <div className="card-body">
+                    <h5 className="card-title" style={{color:'#f3d98b'}}>{item.name}</h5>
+                    <p className="text-sm mb-2" style={{color:'#b8b2a3'}}>{item.description || 'Chef special crafted with premium ingredients.'}</p>
+                    <p className="mb-1 text-sm">⭐ {(item.ratingAverage || 0).toFixed(1)} ({item.ratingCount || 0})</p>
+                    <p className="card-text">
+                      <b>{formatINR(item.price - (item.price * ((item.discountPercent || 0) / 100)))}</b>
+                      {(item.discountPercent || 0) > 0 && <small className="ms-2 text-decoration-line-through text-muted">{formatINR(item.price)}</small>}
+                    </p>
+                    <button type="button" className="lux-btn mt-2 inline-flex items-center rounded-full px-3 py-1 text-sm font-semibold" onClick={() => addItem({ ...item, id: item._id })}>
+                      Add to cart
+                    </button>
+                    <button type="button" className="ms-2 inline-flex h-8 w-8 items-center justify-center rounded-full border-0 bg-light" onClick={() => toggleFavorite(item._id)} aria-label="Toggle favorite">
+                      <span style={{ color: favorites.includes(item._id) ? '#dc2626' : '#9ca3af' }}>♥</span>
+                    </button>
+                    <button type="button" className="ms-2 rounded-full border border-warning bg-transparent px-3 py-1 text-xs text-warning" onClick={() => handleQuickReview(item)} disabled={reviewingId === item._id}>
+                      {reviewingId === item._id ? 'Saving...' : 'Rate'}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
-        </div>
-      ))}
-  </div>
-</div>
-
-
-<h3 className='p1 m-5' data-aos="fade-right"><b>Special For You!</b></h3>
-<div className="card mb-3" data-aos="fade-up">
-  <div className="row g-0">
-    <div className="col-md-4">
-      <img src="https://images.unsplash.com/photo-1567206563064-6f60f40a2b57?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80" className="img-fluid rounded-start" alt="..." height="250px"/>
+        )}
+      </div>
     </div>
-    <div className="col-md-8">
-      <div className="card-body">
-        <h3 className='p1 mt-5'><b>Free Of Cost!</b></h3>
-        <p className="card-text mt-4">As a dessert we will offer you ice creams of flavours which id absolutely free for our all customers.</p>
-        <p className='mt-5'><b>Thank You for visiting us!</b></p>
-             </div>
-    </div>
-  </div>
-</div>
-
-
-
-
-    </div>
-  )
+  );
 }

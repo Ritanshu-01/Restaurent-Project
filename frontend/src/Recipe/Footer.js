@@ -7,35 +7,35 @@ export default function Footer() {
 <div className="footer">
         <div className="location">
             <div className="l1"><b>Location</b></div>
-            <div className="l1">121 Einstein Loop N, Bronx</div>
-            <div className="l1"> NY 10475, United States</div>
+            <div className="l1">Enter Address here</div>
+            <div className="l1">Enter Address here</div>
             <hr/>
     </div>
     <div className="time">
-        <div className="t1"><b>opening hours</b></div>
+        <div className="t1"><b>Opening hours</b></div>
         <div className="t1">monday-friday</div>
         <div className="t1">10am to 5pm</div>
-        <div className="t1">Tel: 010-02-0340</div>
+        <div className="t1">Tel: 9999999999</div>
  
     </div>
     <div className="links">
         <div className="l2"><b>Useful links</b></div>
         <div className="l2">Your Account</div>
         <div className="l2">Become an affiliate</div>
-        <div className="l2">prices</div>
+        <div className="l2">Prices</div>
         <div className="l2">Help</div>
     </div>
     <div className="contact">
     <div className="l2"><b>Contact</b></div>
-        <div className="l2">United States,Pin-45678</div>
+        <div className="l2">ENter State,city here</div>
         <div className="l2">restaurent56@gmail.com</div>
-        <div className="l2">+7689998890</div>
-        <div className="l2">+5678902346</div>
+        <div className="l2">+91-9999999999</div>
+        <div className="l2">+91-9999999999</div>
     </div>
 </div>
 <br />
 <br />
-<p style={{color:'white'}}>@2021 Copyright:Sallan78@gmail.com</p>
+<p style={{color:'white'}}>@2026 Copyright:ritanshu@gmail.com</p>
 
      {/*  <div className="container border mt-5">
         <div className="row">

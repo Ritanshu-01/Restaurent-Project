@@ -1,10 +1,10 @@
-/* Modern, responsive navbar styling */
 .navbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: #fff;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    background: rgba(11, 11, 13, 0.95);
+    border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+    backdrop-filter: blur(10px);
     padding: 0 2rem;
     position: sticky;
     top: 0;
@@ -18,13 +18,13 @@
     justify-content: flex-start;
     font-size: 1.7rem;
     font-weight: bold;
-    color: #16a34a;
+    color: #f3d98b;
     letter-spacing: 2px;
     cursor: pointer;
     transition: color 0.2s;
 }
 .logo:hover {
-    color: #e11d48;
+    color: #d4af37;
 }
 .list {
     flex: 4;
@@ -39,7 +39,7 @@
     position: relative;
 }
 .list-item a, .list-item button {
-    color: #222;
+    color: #f9f5e8;
     text-decoration: none;
     letter-spacing: 1px;
     font-size: 1.05rem;
@@ -51,8 +51,8 @@
     transition: background 0.2s, color 0.2s, font-weight 0.2s;
 }
 .list-item a:hover, .list-item button:hover {
-    color: #fff;
-    background: #16a34a;
+    color: #121212;
+    background: #d4af37;
     font-weight: bold;
     text-decoration: none;
 }
@@ -76,9 +76,9 @@
     box-shadow: 0 1px 4px rgba(0,0,0,0.08);
 }
 .navBtn {
-    background: #e11d48;
-    color: #fff;
-    border: none;
+    background: linear-gradient(90deg, #d4af37, #f3d98b);
+    color: #1b1508;
+    border: 1px solid #f3d98b;
     border-radius: 6px;
     padding: 0.5rem 1.2rem;
     font-size: 1rem;
@@ -87,43 +87,23 @@
     transition: background 0.2s, color 0.2s;
 }
 .navBtn:hover {
-    background: #16a34a;
-    color: #fff;
+    background: #f3d98b;
+    color: #120f08;
 }
+.menu-toggle { display: none; background: transparent; color: #f3d98b; border: 1px solid rgba(212,175,55,.4); border-radius: 8px; }
+.cart-badge { position:absolute; top:-8px; right:-10px; background:#d4af37; color:#111; border-radius:999px; font-size:10px; padding:2px 6px; font-weight:700; }
 @media (max-width: 900px) {
     .navbar {
         flex-direction: column;
         align-items: flex-start;
         padding: 0 1rem;
     }
-    .list {
-        flex-direction: column;
-        gap: 0.5rem;
-        width: 100%;
-        align-items: flex-start;
-    }
+    .menu-toggle { display: inline-block; }
+    .list { display:none; flex-direction: column; gap: 0.5rem; width: 100%; align-items: flex-start; padding-bottom: 10px; }
+    .list.open { display:flex; }
     .logo {
         justify-content: center;
         width: 100%;
         margin-bottom: 0.5rem;
-    }
-}
-
-@media screen and (max-width:1000px){
-    .navbar{
-        flex-direction: column;
-    }
-    .logo{
-        padding:20px;
-    }
-    .list{
-        flex-direction: column;
-    }
-    .logo:hover{
-    padding: 20px 0px;
-    }
-    .list-item{
-        display: flex;
-        justify-content: center;
     }
 }

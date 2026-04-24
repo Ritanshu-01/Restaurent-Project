@@ -32,7 +32,7 @@ function Login() {
       if (result.user && result.token) {
         localStorage.setItem('user1', JSON.stringify(result.user));
         localStorage.setItem('token', result.token);
-        navigate('/story');
+        navigate('/');
       } else {
         setApiError('Unexpected response from server');
       }

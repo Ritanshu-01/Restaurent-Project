@@ -1,8 +1,11 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
+const bcrypt = require('bcryptjs');
 
 const connectDB = require('./config/db');
+const User = require('./models/User');
 
 // Legacy DB models (for Reserve, Updates, Comments, NewsLetter)
 const Update = require('./db/updates');
@@ -16,6 +19,7 @@ const app = express();
 
 app.use(express.json());
 app.use(cors());
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.use('/api', apiRoutes);
 
@@ -84,7 +88,37 @@ app.put("/update/:id",async(req,res)=>{
 
 const PORT = process.env.PORT || 5000;
 
+const ensureAdminUser = async () => {
+  if (process.env.ENABLE_ADMIN_BOOTSTRAP !== 'true') return;
+
+  const adminEmail = process.env.MAIN_ADMIN_EMAIL || process.env.ADMIN_EMAIL;
+  const adminPassword = process.env.MAIN_ADMIN_PASSWORD || process.env.ADMIN_PASSWORD;
+  const adminName = process.env.ADMIN_NAME || 'Admin';
+
+  if (!adminEmail || !adminPassword) return;
+
+  const existing = await User.findOne({ email: adminEmail });
+  if (existing) {
+    if (!existing.isAdmin) {
+      existing.isAdmin = true;
+      await existing.save();
+    }
+    return;
+  }
+
+  const hash = await bcrypt.hash(adminPassword, 10);
+  await User.create({
+    name: adminName,
+    email: adminEmail,
+    password: hash,
+    isAdmin: true
+  });
+};
+
 connectDB()
+  .then(() => {
+    return ensureAdminUser();
+  })
   .then(() => {
     app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
   })
